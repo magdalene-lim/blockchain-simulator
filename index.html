@@ -11,23 +11,23 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
-<body class="bg-gray-100 font-sans p-6 text-gray-800">
+<body class="bg-gray-100 font-sans px-4 py-4 text-gray-800 sm:p-6">
 
     <div class="max-w-7xl mx-auto">
-        <header class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold text-slate-800 mb-2">🌐 Interactive Blockchain Academy</h1>
+        <header class="mb-6 text-center sm:mb-8">
+            <h1 class="mb-2 text-3xl font-extrabold leading-tight text-slate-800 sm:text-4xl">🌐 Interactive Blockchain Academy</h1>
             <p class="text-slate-600 max-w-2xl mx-auto text-sm sm:text-base">
                 An educational sandbox built to demystify cryptography, blocks, mining, and immutable ledgers through live interaction.
             </p>
         </header>
 
-        <div id="status-banner" class="mb-6 p-4 rounded-xl text-center font-bold text-lg shadow-sm bg-emerald-100 text-emerald-800 border border-emerald-300">
+        <div id="status-banner" class="mb-6 rounded-xl border border-emerald-300 bg-emerald-100 p-4 text-center text-base font-bold text-emerald-800 shadow-sm sm:text-lg">
             ✅ Blockchain Status: Secure & Valid
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
             
-            <div class="lg:col-span-4 bg-white p-6 rounded-xl shadow-md border border-gray-200 space-y-6 max-h-[85vh] overflow-y-auto sticky top-6">
+            <div class="order-3 rounded-xl border border-gray-200 bg-white p-4 shadow-md space-y-6 sm:p-6 lg:order-none lg:col-span-4 lg:sticky lg:top-6 lg:max-h-[85vh] lg:overflow-y-auto">
                 <h2 class="text-xl font-bold text-indigo-700 flex items-center gap-2 border-b pb-2">
                     🎓 Learning Guide
                 </h2>
@@ -63,8 +63,8 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-3 space-y-6">
-                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-200">
+            <div class="order-1 space-y-4 sm:space-y-6 lg:order-none lg:col-span-3">
+                <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-md sm:p-5">
                     <h2 class="text-md font-bold uppercase tracking-wider text-gray-400 mb-3">➕ Create Transaction</h2>
                     <div class="space-y-3">
                         <div>
@@ -85,7 +85,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white p-5 rounded-xl shadow-md border border-gray-200">
+                <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-md sm:p-5">
                     <h2 class="text-md font-bold uppercase tracking-wider text-gray-400 mb-2">📥 Mempool Staging</h2>
                     <div id="mempool-list" class="bg-gray-50 p-3 rounded-md border min-h-[60px] text-xs text-gray-600 space-y-1">
                         <div class="text-gray-400 italic text-center py-2">No pending transactions</div>
@@ -96,13 +96,13 @@
                 </div>
             </div>
 
-            <div class="lg:col-span-5">
-                <h2 class="text-xl font-bold text-slate-800 mb-4 flex items-center gap-2 justify-between">
+            <div class="order-2 lg:order-none lg:col-span-5">
+                <h2 class="mb-4 flex flex-col gap-2 text-lg font-bold text-slate-800 sm:flex-row sm:items-center sm:justify-between sm:text-xl">
                     <span>⛓️ Live Ledger Chain</span>
-                    <span id="block-count" class="text-xs bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full font-semibold">1 Block</span>
+                    <span id="block-count" class="w-fit rounded-full bg-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-700">1 Block</span>
                 </h2>
                 
-                <div id="blockchain-container" class="space-y-6">
+                <div id="blockchain-container" class="space-y-4 sm:space-y-6">
                     </div>
             </div>
 
@@ -244,35 +244,35 @@
                 const isGenesis = block.index === 0;
 
                 return `
-                    <div id="block-card-${idx}" class="block-card bg-white p-5 rounded-xl shadow-md border border-gray-200">
-                        <div class="flex justify-between items-center mb-3 border-b border-gray-100 pb-2">
-                            <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Block #${block.index} ${isGenesis ? '✨ Genesis' : ''}</span>
-                            <span class="text-[10px] text-gray-400 font-mono">Time: ${block.timestamp}</span>
+                    <div id="block-card-${idx}" class="block-card rounded-xl border border-gray-200 bg-white p-4 shadow-md sm:p-5">
+                        <div class="mb-3 flex flex-col gap-1 border-b border-gray-100 pb-2 sm:flex-row sm:items-center sm:justify-between">
+                            <span class="text-xs font-bold uppercase tracking-wider text-slate-500">Block #${block.index} ${isGenesis ? '✨ Genesis' : ''}</span>
+                            <span class="font-mono text-xs text-slate-400">Time: ${block.timestamp}</span>
                         </div>
                         
                         <div class="space-y-3 text-xs">
                             <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase">Ledger Content Data</label>
+                                <label class="block text-xs font-bold text-gray-500 uppercase">Ledger Content Data</label>
                                 ${isGenesis ? 
                                     `<input type="text" readonly value="${txContent}" class="w-full mt-1 p-2 bg-gray-50 font-mono text-xs border rounded text-gray-400 cursor-not-allowed">` :
                                     `<input type="text" value="${txContent}" oninput="tamperBlock(${idx}, this)" class="w-full mt-1 p-2 font-mono text-xs border rounded text-slate-700 bg-amber-50/30 border-amber-200 focus:bg-white focus:ring-2 focus:ring-red-400 outline-none" title="Change this text to simulate a hack!">`
                                 }
                             </div>
                             
-                            <div class="grid grid-cols-3 gap-2">
-                                <div class="col-span-2">
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase">Previous Hash</label>
-                                    <div class="font-mono text-[11px] truncate bg-gray-50 p-1.5 rounded border text-gray-400 mt-0.5">${block.previousHash}</div>
+                            <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                                <div class="sm:col-span-2">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase">Previous Hash</label>
+                                    <div class="mt-0.5 break-all rounded border bg-gray-50 p-1.5 font-mono text-xs text-gray-500">${block.previousHash}</div>
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] font-bold text-gray-400 uppercase">Nonce (Guesses)</label>
-                                    <div class="font-mono text-[11px] bg-gray-50 p-1.5 rounded border text-slate-600 mt-0.5 text-center font-bold">${block.nonce}</div>
+                                    <label class="block text-xs font-bold text-gray-500 uppercase">Nonce (Guesses)</label>
+                                    <div class="mt-0.5 rounded border bg-gray-50 p-1.5 text-center font-mono text-xs font-bold text-slate-600">${block.nonce}</div>
                                 </div>
                             </div>
 
                             <div>
-                                <label class="block text-[10px] font-bold text-gray-400 uppercase">Current Block Hash</label>
-                                <div class="font-mono text-[11px] break-all bg-slate-800 text-slate-200 p-2 rounded mt-0.5 font-bold tracking-tight shadow-inner">${block.hash}</div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase">Current Block Hash</label>
+                                <div class="mt-0.5 break-all rounded bg-slate-800 p-2 font-mono text-xs font-bold tracking-tight text-slate-200 shadow-inner">${block.hash}</div>
                             </div>
                         </div>
                     </div>
