@@ -247,7 +247,7 @@
                     <div id="block-card-${idx}" class="block-card rounded-xl border border-gray-200 bg-white p-4 shadow-md sm:p-5">
                         <div class="mb-3 flex flex-col gap-1 border-b border-gray-100 pb-2 sm:flex-row sm:items-center sm:justify-between">
                             <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Block #${block.index} ${isGenesis ? '✨ Genesis' : ''}</span>
-                            <span class="font-mono text-xs text-gray-500">Time: ${block.timestamp}</span>
+                            <span class="font-mono text-[11px] text-gray-500">Time: ${block.timestamp}</span>
                         </div>
                         
                         <div class="space-y-3 text-xs">
@@ -262,7 +262,7 @@
                             <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
                                 <div class="sm:col-span-2">
                                     <label class="block text-xs font-bold text-gray-400 uppercase">Previous Hash</label>
-                                    <div class="mt-0.5 break-all rounded border bg-gray-50 p-1.5 font-mono text-xs text-gray-400">${block.previousHash}</div>
+                                    <div class="mt-0.5 break-words rounded border bg-gray-50 p-1.5 font-mono text-xs text-gray-400">${block.previousHash}</div>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-gray-400 uppercase">Nonce (Guesses)</label>
