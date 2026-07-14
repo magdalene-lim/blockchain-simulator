@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     env:
-      SWA_DEPLOYMENT_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_MEADOW_0585ABB10 || secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+      SWA_DEPLOYMENT_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -25,9 +25,7 @@ jobs:
         if: env.SWA_DEPLOYMENT_TOKEN == ''
         run: |
           echo "Missing Azure Static Web Apps deployment token."
-          echo "Set one of these repository secrets:"
-          echo "- AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_MEADOW_0585ABB10"
-          echo "- AZURE_STATIC_WEB_APPS_API_TOKEN"
+          echo "Set repository secret: AZURE_STATIC_WEB_APPS_API_TOKEN"
           exit 1
       - name: Build And Deploy
         id: builddeploy
@@ -48,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Close Pull Request Job
     env:
-      SWA_DEPLOYMENT_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_ZEALOUS_MEADOW_0585ABB10 || secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+      SWA_DEPLOYMENT_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
     steps:
       - name: Close Pull Request
         id: closepullrequest
