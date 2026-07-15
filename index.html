@@ -164,6 +164,22 @@
         const DIFFICULTY = 2; // Targets hashes starting with "00"
         let blockchain = [];
         let mempool = [];
+        let lastAutoScrolledBrokenIndex = -1;
+
+        function getBlockHealth(index) {
+            const block = blockchain[index];
+            const target = "0".repeat(DIFFICULTY);
+            const hashValid = block.hash === block.calculateHash();
+            const linkValid = index === 0 ? true : block.previousHash === blockchain[index - 1].hash;
+            const powValid = index === 0 ? true : block.hash.substring(0, DIFFICULTY) === target;
+
+            return {
+                hashValid,
+                linkValid,
+                powValid,
+                valid: hashValid && linkValid && powValid
+            };
+        }
 
         function initBlockchain() {
             // Genesis Block Setup
@@ -210,15 +226,14 @@
 
         function validateAndRenderStatus() {
             let isValid = true;
+            let firstBrokenIndex = -1;
             const banner = document.getElementById('status-banner');
 
-            for (let i = 1; i < blockchain.length; i++) {
-                const current = blockchain[i];
-                const previous = blockchain[i - 1];
-
-                if (current.hash !== current.calculateHash() || current.previousHash !== previous.hash) {
+            for (let i = 0; i < blockchain.length; i++) {
+                const health = getBlockHealth(i);
+                if (!health.valid) {
                     isValid = false;
-                    break;
+                    if (firstBrokenIndex === -1) firstBrokenIndex = i;
                 }
             }
 
@@ -226,11 +241,30 @@
                 const blockEl = document.getElementById(`block-card-${idx}`);
                 if (!blockEl) return;
 
-                let blockValid = true;
-                if (block.hash !== block.calculateHash()) blockValid = false;
-                if (idx > 0 && block.previousHash !== blockchain[idx-1].hash) blockValid = false;
+                const health = getBlockHealth(idx);
 
-                if (blockValid) {
+                const previousHashValue = document.getElementById(`previous-hash-value-${idx}`);
+                if (previousHashValue) {
+                    previousHashValue.innerText = block.previousHash;
+                }
+
+                const currentHashValue = document.getElementById(`current-hash-value-${idx}`);
+                if (currentHashValue) {
+                    currentHashValue.innerText = block.hash;
+                }
+
+                const linkBadge = document.getElementById(`link-status-${idx}`);
+                if (linkBadge) {
+                    if (health.linkValid) {
+                        linkBadge.className = "rounded-full border border-emerald-300 bg-emerald-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-700";
+                        linkBadge.innerText = "Link Match";
+                    } else {
+                        linkBadge.className = "rounded-full border border-rose-300 bg-rose-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-rose-700";
+                        linkBadge.innerText = "Link Broken";
+                    }
+                }
+
+                if (health.valid) {
                     blockEl.className = "block-card bg-white p-5 rounded-xl shadow-md border-2 border-emerald-500 bg-emerald-50/20";
                 } else {
                     blockEl.className = "block-card bg-white p-5 rounded-xl shadow-md border-2 border-rose-500 bg-rose-50/40 border-dashed";
@@ -243,6 +277,18 @@
             } else {
                 banner.className = "mb-6 p-4 rounded-xl text-center font-bold text-lg shadow-sm bg-rose-100 text-rose-800 border border-rose-300";
                 banner.innerText = "🚨 ALERT: Chain Broken! A historical record was tampered with!";
+            }
+
+            if (!isValid && firstBrokenIndex !== -1 && firstBrokenIndex !== lastAutoScrolledBrokenIndex) {
+                const firstBrokenBlock = document.getElementById(`block-card-${firstBrokenIndex}`);
+                if (firstBrokenBlock) {
+                    firstBrokenBlock.scrollIntoView({ behavior: "smooth", block: "center" });
+                }
+                lastAutoScrolledBrokenIndex = firstBrokenIndex;
+            }
+
+            if (isValid) {
+                lastAutoScrolledBrokenIndex = -1;
             }
         }
 
@@ -288,8 +334,14 @@
                             
                             <div class="grid grid-cols-1 gap-2 sm:grid-cols-3">
                                 <div class="sm:col-span-2">
-                                    <label class="block text-xs font-bold text-gray-500 uppercase">Previous Hash</label>
-                                    <div class="mt-0.5 break-all rounded border bg-gray-50 p-1.5 font-mono text-xs text-gray-500">${block.previousHash}</div>
+                                    <div class="mb-0.5 flex items-center justify-between">
+                                        <label class="block text-xs font-bold text-gray-500 uppercase">Previous Hash</label>
+                                        ${isGenesis ?
+                                            `<span class="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600">Genesis</span>` :
+                                            `<span id="link-status-${idx}" class="rounded-full border border-slate-300 bg-slate-50 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-slate-600">Checking...</span>`
+                                        }
+                                    </div>
+                                    <div id="previous-hash-value-${idx}" class="mt-0.5 break-all rounded border bg-gray-50 p-1.5 font-mono text-xs text-gray-500">${block.previousHash}</div>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-gray-500 uppercase">Nonce (Guesses)</label>
@@ -298,8 +350,10 @@
                             </div>
 
                             <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase">Current Block Hash</label>
-                                <div class="mt-0.5 break-all rounded bg-slate-800 p-2 font-mono text-xs font-bold tracking-tight text-slate-200 shadow-inner">${block.hash}</div>
+                                <div class="mb-0.5 flex items-center justify-between">
+                                    <label class="block text-xs font-bold text-gray-500 uppercase">Current Block Hash</label>
+                                </div>
+                                <div id="current-hash-value-${idx}" class="mt-0.5 break-all rounded bg-slate-800 p-2 font-mono text-xs font-bold tracking-tight text-slate-200 shadow-inner">${block.hash}</div>
                             </div>
                         </div>
                     </div>
